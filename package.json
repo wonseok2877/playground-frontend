@@ -1,0 +1,57 @@
+{
+  "name": "playground-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@apollo/client": "^3.3.11",
+    "@testing-library/jest-dom": "^5.11.9",
+    "@testing-library/react": "^11.2.5",
+    "@testing-library/user-event": "^12.7.3",
+    "@uiw/react-md-editor": "^3.0.0-beta.6",
+    "apollo-link-error": "^1.1.13",
+    "graphql": "^15.5.0",
+    "graphql-tag": "^2.11.0",
+    "jwt-decode": "^3.1.2",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-draggable": "^4.4.3",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "4.0.3",
+    "rehype-document": "^5.1.0",
+    "rehype-stringify": "^8.0.0",
+    "remark-parse": "^9.0.0",
+    "remark-rehype": "^8.0.0",
+    "unified": "^9.2.1",
+    "web-vitals": "^1.1.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "build:css": "tailwind build src/styles/tailwind.css -o src/styles/style.css"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.2.4",
+    "postcss": "^8.2.7",
+    "tailwindcss": "^2.0.3"
+  }
+}

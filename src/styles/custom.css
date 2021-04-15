@@ -1,0 +1,33 @@
+@keyframes tilt-in-tl {
+  0% {
+    -webkit-transform: rotateY(35deg) rotateX(20deg) translate(-250px, -250px)
+      skew(12deg, 15deg);
+    transform: rotateY(35deg) rotateX(20deg) translate(-250px, -250px)
+      skew(12deg, 15deg);
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: rotateY(0) rotateX(0deg) translate(0, 0) skew(0deg, 0deg);
+    transform: rotateY(0) rotateX(0deg) translate(0, 0) skew(0deg, 0deg);
+    opacity: 1;
+  }
+}
+
+.my_index:hover {
+  z-index: 80;
+}
+
+.my_plus-index {
+  z-index: 11;
+}
+.my_minus-index {
+  z-index: 1;
+}
+
+@font-face {
+  font-family: "RixYeoljeongdo_Regular";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2102-01@1.0/RixYeoljeongdo_Regular.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
