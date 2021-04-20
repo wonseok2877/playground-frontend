@@ -18,10 +18,6 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "rehype-document": "^5.1.0",
-    "rehype-stringify": "^8.0.0",
-    "remark-parse": "^9.0.0",
-    "remark-rehype": "^8.0.0",
-    "unified": "^9.2.1",
     "web-vitals": "^1.1.0"
   },
   "scripts": {

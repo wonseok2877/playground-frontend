@@ -1,28 +1,34 @@
-import React, { useContext } from "react";
-import { stateContext } from "../context/stateContext";
+import { useReactiveVar } from "@apollo/client";
+import { Link } from "react-router-dom";
+import { authTokenVar, removeToken } from "../apolloClient";
 
-const NavBar = () => {
-  // useContext : 어느 페이지에서든 내비게이션 바에 대한 state를 공유함.
-  const { isSideBar, setIsSideBar } = useContext(stateContext);
-
-  // ? : refetch가 바로 반영 안 될때가 있다. 원인이 뭘까?
+const Header = ({ children }) => {
+  // useReactiveVar : 로그인 상태에 따라서 header에 띄울게 달라짐.
+  const authToken = useReactiveVar(authTokenVar);
   return (
     <>
-      <button
-        onClick={() => setIsSideBar(isSideBar ? false : true)}
-        className="fixed z-50 top-20 h-10 bg-purple-600 bg-opacity-80 rounded-xl"
-      >
-        사이드 바
-      </button>
-      <div
-        className={`${
-          isSideBar ? "" : "-translate-x-32 "
-        } absolute transform transition-all ease-in-out duration-700 pt-20 bg-gray-500 bg-opacity-90`}
-      >
-        <h1>내비게이션 바</h1>
+      <div className="flex justify-between bg-gradient-to-r from-yellow-500 to-blue-400">
+        <Link to="/">
+          <i className="fas fa-home text-7xl"></i>
+        </Link>
+        {children}
+        {authToken ? (
+          <div>
+            <Link to="/admin/info">
+              <h2 className="text-5xl">Info</h2>
+            </Link>
+            <button
+              onClick={(e) => {
+                removeToken();
+              }}
+            >
+              log out
+            </button>
+          </div>
+        ) : null}
       </div>
     </>
   );
 };
 
-export default NavBar;
+export default Header;

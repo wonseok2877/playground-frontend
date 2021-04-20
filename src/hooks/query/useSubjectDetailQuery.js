@@ -2,6 +2,9 @@ import { useQuery } from "@apollo/client";
 import { GET_SUBJECT_QUERY } from "../../graphql/query";
 
 const useSubjectDetailQuery = (subjectId, containerTitle) => {
+  console.log(subjectId);
+  console.log(containerTitle);
+
   //   useLazyQuery
   const {
     loading: loadingSubject,

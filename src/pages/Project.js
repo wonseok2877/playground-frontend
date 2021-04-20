@@ -1,16 +1,11 @@
-import { Link, useHistory, useParams } from "react-router-dom";
-import { useCreateSubject } from "../hooks/mutation";
+import { Link } from "react-router-dom";
 import { useAdminCheck } from "../hooks/query";
 import useProjectQuery from "../hooks/query/useProjectQuery";
-import useProjectReducer from "../hooks/reducer/useProjectReducer";
 import CreateSubject from "./CreateSubject";
 
-const Project = () => {
-  const { projectId } = useParams();
+const Project = ({ projectId }) => {
   // Hook : 다른 페이지 reducer 형태만 가져옴
-  const { state, dispatch } = useProjectReducer();
-  const { subjectText, goalText, isModified } = state;
-  const history = useHistory();
+
   // Hook 실행
   useAdminCheck();
 
@@ -18,81 +13,52 @@ const Project = () => {
     +projectId
   );
 
-  if (loadingProject) console.log("loadingProject..");
-  else console.log(projectData);
-  // Hook
-  const { createSubject } = useCreateSubject(+projectId, subjectText, goalText);
-
-  // 함수 정의 : onSubmit event
-  const createProjectSubmit = async (event) => {
-    event.preventDefault();
-    try {
-      const {
-        data: {
-          createSubject: { error, ok, subject },
-        },
-      } = await createSubject();
-      if (ok) {
-        console.log(subject);
-      }
-      if (error) {
-        throw new Error(error);
-      }
-      await refetchProject();
-    } catch (error) {
-      console.log(error.message);
-    } finally {
-      dispatch({ type: "isModified", payload: false });
-    }
-  };
-
   return (
     <div>
-      <div className="flex flex-col justify-evenly items-center h-5/6 w-full">
-        <CreateSubject
-          state={state}
-          dispatch={dispatch}
-          createProjectSubmit={createProjectSubmit}
-        />
-
+      <div className="w-full p-2 flex flex-col justify-evenly items-start bg-indigo-200">
         {loadingProject
           ? null
-          : projectData?.project.result?.subjects.map((s, index) => (
-              <div key={index} className="min-h-0 w-5/6 bg-indigo-500">
-                <h2 className="text-4xl">{s.title}</h2>
-                <span>{s.goal}</span>
-                {s.containers_index.split(",").map((c, index) => (
+          : projectData?.project.result?.subjects.map((subjectItem, index) => (
+              <div
+                key={index}
+                className="w-5/6 mb-5 flex flex-col justify-center"
+              >
+                <div className="flex items-center mb-3">
+                  <i className="far fa-sticky-note text-xl mr-2"></i>
+
                   <Link
-                    to={`/project/${projectId}/subject/${s.id}/${c}`}
-                    key={index}
+                    to={`/project/${projectId}/subject/${subjectItem.id}/${
+                      subjectItem.containers_index.split(",")[0]
+                    }`}
                   >
-                    <span className="mx-4 bg-yellow-500">{c}</span>
+                    <span
+                      className="text-3xl hover:underline"
+                      style={{
+                        fontFamily: "Do Hyeon, sans-serif",
+                        textDecorationThickness: "2px",
+                      }}
+                    >
+                      {subjectItem.title}
+                    </span>
                   </Link>
-                ))}
+                </div>
+                <span>{subjectItem.goal}</span>
+                <div>
+                  {subjectItem.containers_index
+                    .split(",")
+                    .map((containerItem, index) => (
+                      <Link
+                        to={`/project/${projectId}/subject/${subjectItem.id}/${containerItem}`}
+                        key={index}
+                        className="mx-3 p-2 rounded bg-gray-600 text-yellow-300"
+                      >
+                        <span>{containerItem}</span>
+                      </Link>
+                    ))}
+                </div>
               </div>
             ))}
-
-        {/* <div>
-          {page <= 1 ? null : (
-            <button
-              onClick={(e) => {
-                setPage((prev) => prev - 1);
-              }}
-            >
-              👈
-            </button>
-          )}
-          <span>{page}</span>
-          {data && page >= data.project.totalPages ? null : (
-            <button
-              onClick={(e) => {
-                setPage((prev) => prev + 1);
-              }}
-            >
-              👉
-            </button>
-          )}
-        </div> */}
+        <CreateSubject projectId={projectId} refetchProject={refetchProject} />
       </div>
     </div>
   );

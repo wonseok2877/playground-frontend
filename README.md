@@ -1,5 +1,3 @@
-코딩 놀이터
-
 # JS 궁금증
 - 변수 다루는 법 : 어떨 떄 let을 쓰고 어떨 때 const를 써야 하는지. state에 너무 익숙해져있음. 변수를 잘 다루고, 변수와 state의 공통점과 차이점을 안 이후에야 state를 잘 쓸 수 있다.
 - scope : 같은 state가 한 scope안에서는 절대 바뀌지 않는다. setState를 한 실행 컨텍스트 밖으로 나와야 변한 state를 인식할 수 있다. 
@@ -37,6 +35,7 @@
 - update(), onError() : useMutation의 전반적인 이해도가 필요하다.
 - graphQLErrors
 - makeVar()과 useReactiveVar() 그리고 Context state
+- refetch network-onlyㅋㅋㅋ
 
 # 구상
 ## 쓸 때의 관점으로
@@ -46,16 +45,49 @@
 2. 목차마다 딱딱 나눠서 하나의 큰 콘텐츠. 지금의 경우 markdown의 비중이 커짐. 여기 안에서 우리 나름의 순서를 정하고 등등. 나무위키같은 느낌이 된다.
 3. 목차 안에서 순서대로. 컨텐츠 자체가 array가 되서 subject가 거대해짐. 아직은 필요 없을 듯.
 
-## 일단은 써보면서
-분명 써보기 전의 생각과 써본 후의 생각은 다르다. 인지하지 못했던 문제점들이 나올거고. 
+# 고칠 점들
+## 메인 페이지의 기능이 너무 부족. 스레드 개념은 어떨까?
+현재의 메인페이지는 각각의 project와 종속 subject들을 나열하는게 끝이다. 각각 project의 환경 설정, 프로젝트 진행 상황, 해당 유저에 대한 최근의 피드백 등등의 기능이 있으면 정말 좋겠다. 나중에는 유저들끼리의 채팅까지.
+## project configuration
+지금은 edit project mutation의 title, goal바꾸기 기능이 끝이다. 그러나 다른 기능이 늘어남에 따라 이 configuration component는 커질 것이다.
 
-## 수정
-수정할 때 그 프로젝트를 공유하는 유저들끼리 수정된 내역을 알 수 있으면 좋겠다. 
-1. 수정한 시각
-2. 수정한 유저 이름
-3. 무엇이 수정되었는지 로그
+서버 문제 : project의 목표만 바꿀 수가 없음. 
+## SideBar의 필요성
+얘네는 태스크를 분류하는데 핵심이지만, 하나의 페이지를 구성할 정도는 아니라고 생각한다. 따라서 나는 SideBar로 이걸 옮기고 싶다. 
+어설픈 깃허브 클론이라고 볼 수도 있겠지만, 일단 직접 써보는 것에 의의가 있으니깐.
+스타일은 file directory 형태가 어떨까?
+## 수정 정보
+각각의 contents 상단에, 그것이 언제, 누구에 의해서, 무엇이 업데이트 되었는지 알려주고 싶다. 그리고 commit history처럼 그 기록을 보여주고 싶다.
+## 상단 Navbar
+- 유저 설정 메뉴바
+- style
+- 로고
 
-# 문제점들
+# 문제들
+
+## container contents의 data fetch문제
+처음 받아올 땐 잘 받아온다. 그러나 두번째부터 cache에 의존하기 시작하면서 data를 이전 container의 data만을 가져온다.
+
+서버로부터의 result 자체가 안 바뀐다. 
+? : Apollo Client는 cache를 저장할 때 Query단위로 저장하는 것 같다. 그래서 단 하나의 Query로 그 안의 property들까지 여러번 cache화하려고 해서 그런듯 하다. 
+따라서 cache 혹은 refetch를 쓸거면 Query문을 구분지어줘야 한다. 즉, 매번 다른 Query를 던져줘야 나중에 cache를 쓸 때에도 원활한 것.
+혹은 useLazyQuery 함수로 해결될 것이다. 그러나 매번 던져야 한다는게.. 그러면 Apollo Client를 쓰는 의미가 없다ㅋㅋ. 
+
+container의 contents에 대한 Query문이 서버쪽에서 있어야 한다고 생각한다. 
+
+애초에 이거 지금 container의 contents만 받아올려고 하는데 무겁게 전체 subject를 Query해야되는거잖아?
+
+## 특정 시점마다 Mutation
+useEffect의 dependency에 대한 이해 부족이 원인.
+선택지
+1. contentText를 dependency로 하는 useEffect를 실행. contentText가 서버로부터 온 이후에 바뀐 경우, 즉 유저가 수정을 하려고 한 경우에 실행. setTimeout을 실행해도 되나. 바깥 scope에서 정의한 변수를 하나 올리고, 그게 1인 동안은 setTimeout실행 안함. 그리고 지정한 시간이 끝났을 때 Mutation요청을 던진다.
+2. Router params의 containerTitle을 dependency로 하는 useEffect 실행. 그렇지 않으면 containerTitle이 바뀐 뒤에도 이전의 state를 요청으로 넣을 것이다.
+
+로직
+1. setInterval을 실행하는 시점은 처음 페이지가 mounting되거나 containerTitle이 바뀌었을 때다. 
+container이 바뀌었는데도 마운팅 되었을 때의 state를 갖고 요청을 하게 되기 때문. 
+1. Mutation에는 3개의 변수를 쓰고 있다. 컨테이너를 구분하기 위한 subjectId와 containerTitle, 그리고 contentText. 이 변수들을 정의한 이후에 함수를 실행해야 한다.
+2.  
 
 ## CSS가 없어서 쓸 맛이 안 난다.
 사실 없어도 그만 있어도 그만이기는 하다. 그러나 실제로 내가 쓰고 있다는 느낌을 주기 위해서 최소한은 꾸며야겠다.

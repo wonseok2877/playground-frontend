@@ -11,7 +11,7 @@ import Register from "./pages/Register";
 import CreateSubject from "./pages/CreateSubject";
 import Project from "./pages/Project";
 import CreateProject from "./pages/CreateProject";
-import Header from "./components/Header";
+import NavBar from "./components/NavBar";
 // 토큰이 없을 경우에 로그인 페이지, 있으면 메인페이지
 // 메인페이지에선 me Query문을 보내서 ok가 false면 토큰 삭제
 /* 로직
@@ -48,7 +48,7 @@ const Router = () => {
 
   return (
     <BrowserRouter>
-      <Header />
+      <NavBar />
       <Switch>
         <Route exact path="/login" component={Login} />
         <Route exact path="/register" component={Register} />
@@ -62,7 +62,6 @@ const Router = () => {
         <Route exact path="/" component={Main} />
         <Route exact path="/admin/info" component={AdminInfo} />
         <Route exact path="/project/create" component={CreateProject} />
-        <Route exact path="/project/:projectId" component={Project} />
         <Route
           exact
           path="/project/:projectId/subject/create"
@@ -70,9 +69,10 @@ const Router = () => {
         />
         <Route
           exact
-          path="/project/:projectId/subject/:subjectId/:containerTitle"
+          path="/project/:projectId/subject/:subjectId/:containerId"
           component={SubjectDetail}
         />
+
         <Redirect from="/*" to="/" />
       </Switch>
     </BrowserRouter>
