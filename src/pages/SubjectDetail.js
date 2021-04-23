@@ -8,6 +8,7 @@ import ContentsSection from "../components/detail-contents/ContentsSection";
 import SettingModal from "../components/detail-modal/SettingModal";
 import { useQuery } from "@apollo/client";
 import { GET_SUBJECT_QUERY } from "../graphql/query";
+import NavBar from "../components/NavBar";
 
 // 함수 정의 : component
 const SubjectDetail = () => {
@@ -70,6 +71,7 @@ const SubjectDetail = () => {
 
   return (
     <>
+      <NavBar />
       {subjectData?.subject.ok ? (
         <>
           <div className="px-5 pt-7 flex flex-col shadow-2xl bg-gray-200 ">

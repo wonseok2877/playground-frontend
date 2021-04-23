@@ -1,3 +1,4 @@
+import NavBar from "../components/NavBar";
 import { useAdminCheck } from "../hooks/query";
 const AdminInfo = () => {
   // useLazyQuery
@@ -5,6 +6,7 @@ const AdminInfo = () => {
 
   return (
     <>
+      <NavBar />
       {loading
         ? null
         : error

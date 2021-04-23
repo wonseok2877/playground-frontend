@@ -31,3 +31,139 @@
   font-weight: normal;
   font-style: normal;
 }
+
+.keyframes-slide-out-right {
+  animation: slide-out-right 3s cubic-bezier(0.55, 0.85, 0.68, 0.53) both;
+}
+
+.keyframes-appear {
+  animation: appear 3s cubic-bezier(0.55, 0.85, 0.68, 0.53) both;
+}
+
+@keyframes slide-out-right {
+  0% {
+    transform: translateX(-120px);
+    opacity: 0;
+  }
+  20% {
+    transform: translateX(-20px);
+    opacity: 1;
+    color: thistle;
+  }
+  40% {
+    opacity: 1;
+    color: darkmagenta;
+  }
+  /* CSS trick - make the animation time longer, and make the parts as same.  */
+  60% {
+    opacity: 1;
+  }
+  80% {
+    transform: translateX(0px);
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes appear {
+  0% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.keyframes-rotate-down {
+  -webkit-animation: rotate-down 1s cubic-bezier(0.455, 0.7, 0.515, 1) both;
+  animation: rotate-down 1s cubic-bezier(0.455, 0.7, 0.515, 1) both;
+}
+
+.keyframes-rotate-up {
+  -webkit-animation: rotate-up 0.2s cubic-bezier(0.455, 0.7, 0.515, 1) both;
+  animation: rotate-up 0.2s cubic-bezier(0.455, 0.7, 0.515, 1) both;
+}
+
+.keyframes-slide-bottom {
+  -webkit-animation: slide-bottom 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  animation: slide-bottom 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+.keyframes-slide-top {
+  -webkit-animation: slide-top 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  animation: slide-top 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+@keyframes rotate-down {
+  0% {
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
+    -webkit-transform-origin: bottom;
+    transform-origin: bottom;
+  }
+
+  10% {
+    -webkit-transform: rotate(280deg);
+    transform: rotate(280deg);
+    -webkit-transform-origin: bottom;
+    transform-origin: bottom;
+  }
+  40% {
+    -webkit-transform: rotate(160deg);
+    transform: rotate(160deg);
+    -webkit-transform-origin: bottom;
+    transform-origin: bottom;
+  }
+  70% {
+    -webkit-transform: rotate(190deg);
+    transform: rotate(190deg);
+    -webkit-transform-origin: bottom;
+    transform-origin: bottom;
+  }
+  100% {
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
+    -webkit-transform-origin: bottom;
+    transform-origin: bottom;
+  }
+}
+
+@keyframes rotate-up {
+  0% {
+    -webkit-transform: rotate(160deg);
+    transform: rotate(160deg);
+    -webkit-transform-origin: bottom;
+    transform-origin: bottom;
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+    -webkit-transform-origin: bottom;
+    transform-origin: bottom;
+  }
+}
+
+@keyframes slide-bottom {
+  0% {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+  100% {
+    -webkit-transform: translateY(260px);
+    transform: translateY(260px);
+    opacity: 100;
+  }
+}
+
+@keyframes slide-top {
+  0% {
+    -webkit-transform: translateY(100px);
+    transform: translateY(100px);
+  }
+  100% {
+    -webkit-transform: translateY(-200px);
+    transform: translateY(-200px);
+    opacity: 0;
+  }
+}

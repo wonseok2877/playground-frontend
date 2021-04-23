@@ -1,4 +1,5 @@
 import { useState } from "react";
+import NavBar from "../components/NavBar";
 import { useCreateSubject } from "../hooks/mutation";
 
 const CreateSubject = ({ projectId, refetchProject }) => {

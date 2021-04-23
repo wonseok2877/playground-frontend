@@ -48,7 +48,6 @@ const Router = () => {
 
   return (
     <BrowserRouter>
-      <NavBar />
       <Switch>
         <Route exact path="/login" component={Login} />
         <Route exact path="/register" component={Register} />
