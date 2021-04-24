@@ -12,7 +12,6 @@ const NavBar = () => {
     <>
       <div className="px-2 py-1 flex justify-between items-center bg-gradient-to-r from-green-400 to-blue-400">
         <Link to="/">
-          {/* <i className="fas fa-home text-7xl"></i> */}
           <div
             style={{
               fontFamily: "Arbutus Slab, serif",

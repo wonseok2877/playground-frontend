@@ -28,7 +28,7 @@ export const removeToken = () => {
 
 // ? : createHttpLink는 REST API때의 axios 인스턴스와 비슷한 건가.
 const httpLink = createHttpLink({
-  uri: "http://localhost:4000/graphql",
+  uri: "http://54.180.147.192:80/graphql",
 });
 
 // ? : setContext
