@@ -80,6 +80,8 @@ export const GET_SUBJECT_QUERY = gql`
         containers {
           title
           content
+          createdAt
+          updatedAt
         }
       }
     }

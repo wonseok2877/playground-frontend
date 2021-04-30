@@ -23,7 +23,6 @@ const LoggingForm = () => {
         dispatch({ type: "idMessage", payload: "아이디 입력하라우" });
         return;
       }
-      console.log(state.passwordText);
       if (!state.passwordText) {
         dispatch({
           type: "passwordMessage",

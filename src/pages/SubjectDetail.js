@@ -21,7 +21,8 @@ const SubjectDetail = () => {
   const [currentContainer, setCurrentContainer] = useState("");
 
   // Hook : 토큰 유효성 검사 Query
-  useAdminCheck();
+  const { data } = useAdminCheck();
+  console.log(data);
   // useMutation
   const {
     loading: loadingSubject,

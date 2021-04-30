@@ -20,6 +20,7 @@ const ContentsSection = ({
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isContentChanged, setIsContentChanged] = useState(false);
   const [contentText, setContentText] = useState("");
+  const [updatedDate, setUpdatedDate] = useState(null);
   // useRef
   const modalRef = useRef(null);
   // useMutation
@@ -56,6 +57,13 @@ const ContentsSection = ({
       } else {
         setContentText("");
       }
+      // 서버쪽에서 container을 생성하면 자동으로 updatedAt을 만들어줌.
+      // AWS쪽 혹은 서버쪽에서 UTC시간으로 변환하고 있다. 한국시간으로 바꿔줘야 함.
+      const utcTime = new Date(result.containers[0].updatedAt);
+      const koreanTime =
+        utcTime.getTime() - utcTime.getTimezoneOffset() * 60000;
+      const localeTime = new Date(koreanTime).toLocaleString();
+      setUpdatedDate(localeTime);
     } else {
       return;
     }
@@ -118,6 +126,7 @@ const ContentsSection = ({
             isContentChanged ? "text-yellow-400" : "text-green-500"
           } transition-colors ease-in-out duration-300`}
         ></i>
+        <h1>마지막 수정 : {updatedDate}</h1>
         <div className="relative">
           {isDeleteModalOpen ? (
             <div
