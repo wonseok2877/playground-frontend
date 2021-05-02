@@ -104,6 +104,9 @@ const ContentsSection = ({
         console.log(error);
       }
     },
+    cancelContainerEdit: () => {
+      setContentText(result.containers[0].content);
+    },
     trashIconClick: () => setIsDeleteModalOpen(true),
     deleteContainerClick: async () => {
       try {
@@ -119,57 +122,74 @@ const ContentsSection = ({
     },
   };
   return (
-    <div className="flex flex-col px-10 py-10 min-h-screen bg-gray-500 bg-opacity-20">
-      <div className="h-5 flex justify-between items-center mb-2">
-        <i
-          className={`fas fa-circle ${
-            isContentChanged ? "text-yellow-400" : "text-green-500"
-          } transition-colors ease-in-out duration-300`}
-        ></i>
-        <h1>마지막 수정 : {updatedDate}</h1>
-        <div className="relative">
-          {isDeleteModalOpen ? (
-            <div
-              ref={modalRef}
-              className={`absolute z-10 w-48 h-16 right-0 flex flex-col justify-between p-1 bg-white border-2 border-black rounded-lg`}
-            >
-              <h1>Are you sure to delete?</h1>
-              <div>
-                <button
-                  onClick={eventHandler.deleteContainerClick}
-                  className="px-2 rounded-sm bg-red-600 focus:outline-none"
-                >
-                  Yes
-                </button>
-                <button
-                  className="px-2 rounded-sm bg-yellow-300 focus:outline-none"
-                  onClick={() => setIsDeleteModalOpen(false)}
-                >
-                  No
-                </button>
+    <div className="flex flex-col min-h-screen bg-gray-500 bg-opacity-20">
+      <div className="px-10 pt-10 pb-32">
+        <div className="h-5 flex justify-between items-center mb-2">
+          <i
+            className={`fas fa-circle ${
+              isContentChanged ? "text-yellow-400" : "text-green-500"
+            } transition-colors ease-in-out duration-300`}
+          ></i>
+          <h1>마지막 수정 : {updatedDate}</h1>
+          <div className="relative">
+            {isDeleteModalOpen ? (
+              <div
+                ref={modalRef}
+                className={`absolute z-10 w-48 h-16 right-0 flex flex-col justify-between p-1 bg-white border-2 border-black rounded-lg`}
+              >
+                <h1>Are you sure to delete?</h1>
+                <div>
+                  <button
+                    onClick={eventHandler.deleteContainerClick}
+                    className="px-2 rounded-sm bg-red-600 focus:outline-none"
+                  >
+                    Yes
+                  </button>
+                  <button
+                    className="px-2 rounded-sm bg-yellow-300 focus:outline-none"
+                    onClick={() => setIsDeleteModalOpen(false)}
+                  >
+                    No
+                  </button>
+                </div>
               </div>
-            </div>
-          ) : (
-            <i
-              className="fas fa-trash-alt z-0"
-              onClick={eventHandler.trashIconClick}
-            ></i>
-          )}
+            ) : (
+              <i
+                className="fas fa-trash-alt z-0"
+                onClick={eventHandler.trashIconClick}
+              ></i>
+            )}
+          </div>
+        </div>
+        <MDEditor
+          value={contentText}
+          onChange={setContentText}
+          preview={contentText ? "live" : "edit"}
+          height={600}
+          spellCheck="false"
+        />
+      </div>
+      <div
+        className={`${
+          isContentChanged ? "opacity-100" : "opacity-0"
+        } fixed z-10 bottom-0 w-screen px-10 py-5 flex justify-between items-center transition-opacity ease-in-out duration-300 bg-white`}
+      >
+        <div></div>
+        <div>
+          <button
+            onClick={eventHandler.cancelContainerEdit}
+            className="px-3 py-2 text-gray-600 focus:outline-none"
+          >
+            취소
+          </button>
+          <button
+            onClick={eventHandler.editContentSubmit}
+            className="px-3 py-2 bg-black text-white focus:outline-none"
+          >
+            완료
+          </button>
         </div>
       </div>
-      <MDEditor
-        value={contentText}
-        onChange={setContentText}
-        preview={contentText ? "live" : "edit"}
-        height={600}
-        spellCheck="false"
-      />
-      <button
-        onClick={eventHandler.editContentSubmit}
-        className="px-3 py-2 bg-black text-white"
-      >
-        완료
-      </button>
     </div>
   );
 };

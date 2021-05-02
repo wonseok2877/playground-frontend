@@ -3,8 +3,6 @@ import { Link, useHistory } from "react-router-dom";
 import checkRegex from "../functions/checkRegex";
 import { useRegister } from "../hooks/mutation";
 import { useRegisterReducer } from "../hooks/reducer";
-import LargeText from "./texts/LargeText";
-import MediumText from "./texts/MediumText";
 
 const RegisteringForm = () => {
   const { state, dispatch } = useRegisterReducer();
@@ -150,116 +148,114 @@ const RegisteringForm = () => {
   };
   return (
     <>
-      <div className="bg-yellow-500 h-screen">
-        <div className="flex flex-col justify-center items-center h-screen">
-          <div className="flex flex-col items-center w-9/12 h-5/6 py-6 rounded-lg bg-yellow-400">
-            <LargeText>회원가입</LargeText>
-            <form
-              onSubmit={handleSubmit}
-              className=" w-full flex flex-col justify-evenly items-center"
-            >
-              <div className="w-4/6 h-36 flex justify-between items-start">
-                <MediumText>아이디</MediumText>
-                <div className="w-80 flex flex-col items-start">
-                  <input
-                    value={state.nameText}
-                    // trim()
-                    onChange={handleChange.nameInputChange}
-                    // onBlur : 포커스 아웃될 때 함수 실행
-                    type="text"
-                    className="h-20 text-3xl pl-4 rounded-md focus:outline-none"
-                  />
-                  <h3 className="h-12 mt-2 ml-2 text-red-500 text-center text-xl">
-                    {state.nameText.length > 0 && !state.idMessage && (
-                      <i className="fas fa-check text-green-500"></i>
-                    )}
-                    {state.idMessage && (
-                      <div>
-                        <i class="fas fa-exclamation-triangle mr-3"></i>
-                        <span>{state.idMessage}</span>
-                      </div>
-                    )}
-                  </h3>
-                </div>
-              </div>
-              <div className="w-4/6 h-40 flex justify-between items-start">
-                <MediumText>비밀번호</MediumText>
-                <div className="w-80 flex flex-col items-start">
-                  <input
-                    value={state.passwordText}
-                    onChange={handleChange.passwordInputChange}
-                    type="password"
-                    className="h-20 text-3xl pl-4 rounded-md focus:outline-none"
-                  />
-                  <h3 className="h-12 mt-2 ml-2 text-red-500 text-center text-xl">
-                    {state.passwordText.length > 0 &&
-                      !state.passwordMessage && (
-                        <i className="fas fa-check text-green-500"></i>
-                      )}
-                    {state.passwordMessage && (
-                      <div>
-                        <i class="fas fa-exclamation-triangle mr-3"></i>
-                        <span>{state.passwordMessage}</span>
-                      </div>
-                    )}
-                  </h3>
-                </div>
-              </div>
-              <div className="w-4/6 h-40 flex justify-between items-start">
-                <MediumText>비밀번호 재확인</MediumText>
-                <div className="w-80 flex flex-col items-start">
-                  <input
-                    value={state.confirmPasswordText}
-                    onChange={handleChange.checkConfirmPassword}
-                    type="password"
-                    className="h-20 text-3xl pl-4 rounded-md focus:outline-none"
-                  />
-                  <h3 className="h-12 mt-2 ml-2 text-red-500 text-center text-xl">
-                    {state.confirmPasswordText.length > 0 &&
-                      !state.confirmPasswordMessage &&
-                      !state.passwordMessage && (
-                        <i className="fas fa-check text-green-500"></i>
-                      )}
-                    {state.confirmPasswordMessage && (
-                      <div>
-                        <i class="fas fa-exclamation-triangle mr-3"></i>
-                        <span>{state.confirmPasswordMessage}</span>
-                      </div>
-                    )}
-                  </h3>
-                </div>
-              </div>
-              <h3 className="h-12 text-red-500 text-center text-xl">
-                {state.errorMessage && state.errorMessage}
-              </h3>
-              {state.idMessage ||
-              state.passwordMessage ||
-              state.confirmPasswordMessage ? (
-                <button
-                  disabled
-                  type="submit"
-                  className="w-4/12 h-1/6 opacity-30 cursor-not-allowed rounded bg-green-600"
-                >
-                  Submit
-                </button>
-              ) : (
-                <button
-                  type="submit"
-                  className="w-4/12 h-1/6 rounded bg-green-600"
-                >
-                  Submit
-                </button>
+      <form
+        onSubmit={handleSubmit}
+        className="w-full flex flex-col justify-evenly items-center"
+      >
+        <div className="w-4/6 h-36 flex flex-col justify-between items-start">
+          <h2 className="text-2xl pl-1">ID</h2>
+          <div className="w-80 flex flex-col items-start">
+            <input
+              value={state.nameText}
+              // trim()
+              onChange={handleChange.nameInputChange}
+              // onBlur : 포커스 아웃될 때 함수 실행
+              type="text"
+              className="h-16 text-3xl mt-1 pl-4 border-2 border-green-800 rounded-md focus:outline-none"
+            />
+            <h3 className="h-12 mt-2 ml-2 text-red-500 text-center text-xl">
+              {state.nameText.length > 0 && !state.idMessage && (
+                <i className="fas fa-check text-green-500"></i>
               )}
-            </form>
-            <Link
-              to="login"
-              className="pt-4 w-5/12 h-24  text-center text-2xl bg-pink-300 text-blue-400 rounded"
-            >
-              이미 가입되어 있으신가요 ? 로그인
-            </Link>
+              {state.idMessage && (
+                <div>
+                  <i class="fas fa-exclamation-triangle mr-3"></i>
+                  <span>{state.idMessage}</span>
+                </div>
+              )}
+            </h3>
           </div>
         </div>
-      </div>
+        <div className="w-4/6 h-40 flex flex-col justify-between items-start">
+          <h2 className="text-2xl pl-1">Password</h2>
+
+          <div className="w-80 flex flex-col items-start">
+            <input
+              value={state.passwordText}
+              onChange={handleChange.passwordInputChange}
+              type="password"
+              className="h-16 text-3xl mt-1 pl-4 border-2 border-green-800 rounded-md focus:outline-none"
+            />
+            <h3 className="h-12 mt-2 ml-2 text-red-500 text-center text-xl">
+              {state.passwordText.length > 0 && !state.passwordMessage && (
+                <i className="fas fa-check text-green-500"></i>
+              )}
+              {state.passwordMessage && (
+                <div>
+                  <i class="fas fa-exclamation-triangle mr-3"></i>
+                  <span>{state.passwordMessage}</span>
+                </div>
+              )}
+            </h3>
+          </div>
+        </div>
+        <div className="w-4/6 h-40 flex flex-col justify-between items-start">
+          <h2 className="text-2xl pl-1">Confirm Password</h2>
+
+          <div className="w-80 flex flex-col items-start">
+            <input
+              value={state.confirmPasswordText}
+              onChange={handleChange.checkConfirmPassword}
+              type="password"
+              className="h-16 text-3xl mt-1 pl-4 border-2 border-green-800 rounded-md focus:outline-none"
+            />
+            <h3 className="h-12 mt-2 ml-2 text-red-500 text-center text-xl">
+              {state.confirmPasswordText.length > 0 &&
+                !state.confirmPasswordMessage &&
+                !state.passwordMessage && (
+                  <i className="fas fa-check text-green-500"></i>
+                )}
+              {state.confirmPasswordMessage && (
+                <div>
+                  <i class="fas fa-exclamation-triangle mr-3"></i>
+                  <span>{state.confirmPasswordMessage}</span>
+                </div>
+              )}
+            </h3>
+          </div>
+        </div>
+        <h3 className="h-12 text-red-500 text-center text-xl">
+          {state.errorMessage && state.errorMessage}
+        </h3>
+        {state.idMessage ||
+        state.passwordMessage ||
+        state.confirmPasswordMessage ? (
+          <button
+            disabled
+            type="submit"
+            className="w-4/12 h-1/6 opacity-30 cursor-not-allowed rounded bg-green-700 text-white"
+          >
+            Register
+          </button>
+        ) : (
+          <button
+            type="submit"
+            className={`w-4/12 h-1/6 rounded  bg-green-700 text-white ${
+              state.nameText && state.passwordText && state.confirmPasswordText
+                ? "opacity-100"
+                : "opacity-30 cursor-not-allowed"
+            }`}
+          >
+            Register
+          </button>
+        )}
+      </form>
+      <Link
+        to="login"
+        className="pt-4 w-6/12 h-16  text-center text-2xl text-gray-500 underline"
+      >
+        이미 가입되어 있으신가요 ? 로그인
+      </Link>
     </>
   );
 };

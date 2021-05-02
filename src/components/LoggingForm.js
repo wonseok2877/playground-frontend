@@ -4,7 +4,6 @@ import { setToken } from "../apolloClient";
 import checkRegex from "../functions/checkRegex";
 import { useLogin } from "../hooks/mutation";
 import { useLoginReducer } from "../hooks/reducer";
-import LargeText from "./texts/LargeText";
 
 const LoggingForm = () => {
   // Hook : 로그인 state들과 dispatch 함수들을 한번에 담아버림
@@ -119,33 +118,56 @@ const LoggingForm = () => {
 
   return (
     <>
-      <div className="flex flex-col justify-evenly items-center m-auto w-7/12 h-full rounded-md bg-blue-200">
-        <LargeText>Log in</LargeText>
-        <form
-          onSubmit={eventHandler.handleSubmit}
-          className="w-full h-1/2 flex flex-col justify-evenly items-center "
-        >
-          <input
-            value={state.nameText}
-            onChange={eventHandler.nameInputChange}
-            type="text"
-            className="w-7/12 h-20 text-3xl p-5 focus:outline-none rounded-md"
-          />
-          <h3 className="w-7/12 h-9 text-red-500 text-center text-xl">
+      <form
+        onSubmit={eventHandler.handleSubmit}
+        className="w-full h-1/2 flex flex-col justify-evenly items-center "
+      >
+        <h3 className="text-red-500 text-center text-xl w-10/12">
+          {state.errorMessage && (
+            <div>
+              <i class="fas fa-exclamation-triangle mr-3"></i>
+              <span>{state.errorMessage}</span>
+            </div>
+          )}
+        </h3>
+        <div className="w-full flex flex-col items-center">
+          <div>
+            <i
+              className={`far fa-user text-3xl text-gray-500 ${
+                state.nameText && !state.idMessage && "text-green-700"
+              }`}
+            ></i>
+            <input
+              value={state.nameText}
+              onChange={eventHandler.nameInputChange}
+              type="text"
+              className="w-10/12 h-20 pl-3 ml-1 text-3xl text-green-900 border-b-2 focus:border-green-900 focus:outline-none"
+              placeholder="ID"
+            />
+          </div>
+          <h3 className="w-9/12 h-9 text-red-500 text-center text-xl">
             {state.idMessage && (
               <div>
-                <i class="fas fa-exclamation-triangle mr-3"></i>
+                <i className="fas fa-exclamation-triangle mr-3"></i>
                 <span>{state.idMessage}</span>
               </div>
             )}
           </h3>
-          <input
-            value={state.passwordText}
-            onChange={eventHandler.passwordInputChange}
-            type="password"
-            className=" w-7/12 h-20 text-3xl p-5 focus:outline-none rounded-md"
-          />
-          <h3 className=" w-7/12 h-9 text-red-500 text-center text-xl">
+          <div>
+            <i
+              className={`fas fa-key text-3xl text-gray-500 ${
+                state.passwordText && !state.passwordMessage && "text-green-700"
+              }`}
+            ></i>
+            <input
+              value={state.passwordText}
+              onChange={eventHandler.passwordInputChange}
+              type="password"
+              className=" w-10/12 h-20 pl-3 ml-1 text-3xl text-green-900 border-b-2 focus:border-green-900 focus:outline-none"
+              placeholder="password"
+            />
+          </div>
+          <h3 className=" w-9/12 h-9 text-red-500 text-center text-xl">
             {state.passwordMessage && (
               <div>
                 <i class="fas fa-exclamation-triangle mr-3"></i>
@@ -153,25 +175,29 @@ const LoggingForm = () => {
               </div>
             )}
           </h3>
-          <h3 className="text-red-500 text-center text-xl w-10/12">
-            {state.errorMessage && (
-              <div>
-                <i class="fas fa-exclamation-triangle mr-3"></i>
-                <span>{state.errorMessage}</span>
-              </div>
-            )}
-          </h3>
-          <button type="submit" className="w-7/12 h-1/6 rounded bg-green-600">
-            Submit
-          </button>
-        </form>
-        <Link
-          to="register"
-          className="pt-4 w-5/12 h-16  text-center text-2xl text-white bg-yellow-500 rounded"
+        </div>
+        <button
+          type="submit"
+          className={`w-6/12 h-1/6 rounded bg-green-600 text-2xl text-white 
+          ${
+            !state.nameText ||
+            !state.passwordText ||
+            state.idMessage ||
+            state.passwordMessage
+              ? "opacity-40 cursor-not-allowed"
+              : ""
+          }`}
+          style={{ backgroundColor: "#065A6B" }}
         >
-          새 계정 만들기
-        </Link>
-      </div>
+          Log in
+        </button>
+      </form>
+      <Link
+        to="register"
+        className="pt-4 w-6/12 h-16  text-center text-2xl text-gray-500 underline"
+      >
+        계정이 없으신가요? 회원가입
+      </Link>
     </>
   );
 };

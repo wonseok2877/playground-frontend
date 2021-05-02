@@ -91,8 +91,11 @@ const ConfigurationModal = ({
           </div>
         </div>
         <div className="flex justify-between">
-          <div onClick={eventHandler.saveConfigutationCLick}>
-            <i className="fas fa-check text-4xl "></i>
+          <div
+            onClick={eventHandler.saveConfigutationCLick}
+            className="flex items-center cursor-pointer text-green-600"
+          >
+            <i className="fas fa-check text-4xl"></i>
             <span>저장</span>
           </div>
           <div
