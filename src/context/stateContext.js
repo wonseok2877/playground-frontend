@@ -4,9 +4,9 @@ export const stateContext = createContext();
 
 export const StateContextProvider = (props) => {
   // useState
-  const [isSideBar, setIsSideBar] = useState(false);
+  const [isSideBarOpen, setIsSideBarOpen] = useState(false);
   return (
-    <stateContext.Provider value={{ isSideBar, setIsSideBar }}>
+    <stateContext.Provider value={{ isSideBarOpen, setIsSideBarOpen }}>
       {props.children}
     </stateContext.Provider>
   );

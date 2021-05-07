@@ -1,6 +1,5 @@
 import { useState } from "react";
-import NavBar from "../components/NavBar";
-import { useCreateSubject } from "../hooks/mutation";
+import { useCreateSubject } from "../../hooks/mutation";
 
 const CreateSubject = ({ projectId, refetchProject }) => {
   // useState
@@ -80,11 +79,9 @@ const CreateSubject = ({ projectId, refetchProject }) => {
       ) : (
         <button
           onClick={() => setIsModified(true)}
-          className="px-6 py-2 flex justify-center items-center text-2xl rounded bg-yellow-400"
+          className=" flex justify-center items-center text-2xl rounded"
         >
-          <i className="far fa-sticky-note text-xl mr-2"></i>
-
-          <span>New</span>
+          <i className="fas fa-plus text-xl mr-2"></i>
         </button>
       )}
     </>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useAdminCheck } from "../hooks/query";
 import NotFound from "../components/etc/NotFound";
@@ -9,6 +9,8 @@ import SettingModal from "../components/detail-modal/SettingModal";
 import { useQuery } from "@apollo/client";
 import { GET_SUBJECT_QUERY } from "../graphql/query";
 import NavBar from "../components/NavBar";
+import SideBar from "../components/sidebar/SideBar";
+import { stateContext } from "../context/stateContext";
 
 // 함수 정의 : component
 const SubjectDetail = () => {
@@ -20,9 +22,10 @@ const SubjectDetail = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentContainer, setCurrentContainer] = useState("");
 
+  // useContext
+  const { isSideBarOpen } = useContext(stateContext);
   // Hook : 토큰 유효성 검사 Query
-  const { data } = useAdminCheck();
-  console.log(data);
+  useAdminCheck();
   // useMutation
   const {
     loading: loadingSubject,
@@ -43,10 +46,6 @@ const SubjectDetail = () => {
     if (!currentContainer) {
       setCurrentContainer(containerId);
       // if : 집중하려는 컨테이너가 기존의 params과 달라지는 경우, 즉 선택한 경우 url replace()
-    } else if (currentContainer !== containerId) {
-      history.replace(
-        `/project/${projectId}/subject/${subjectId}/${currentContainer}`
-      );
     }
   }, [history, projectId, subjectId, containerId, currentContainer]);
   // useEffect : location이 바뀔 때마다 hitory의 action에 따라 data를 fetch할지 말지 결정한다.
@@ -71,35 +70,29 @@ const SubjectDetail = () => {
   }, [subjectData]);
 
   return (
-    <>
+    <div className="overflow-hidden bg-gray-100">
       <NavBar />
-      {subjectData?.subject.ok ? (
-        <>
-          <div className="px-5 pt-7 flex flex-col shadow-2xl bg-gray-200 ">
-            <DetailHeader
-              subjectData={subjectData}
-              refetchSubject={refetchSubject}
-              setIsModalOpen={setIsModalOpen}
-            />
-            <ContainerIndex
+      <SideBar />
+      <div
+        className={` flex flex-col w-screen h-screen pt-14 bg-gray-100  ${
+          isSideBarOpen ? "transform pl-64" : ""
+        } transition-all ease-in-out duration-500`}
+      >
+        {subjectData?.subject.ok ? (
+          <>
+            <ContentsSection
               subjectData={subjectData}
               refetchSubject={refetchSubject}
               currentContainer={currentContainer}
               setCurrentContainer={setCurrentContainer}
             />
-          </div>
-          <ContentsSection
-            subjectData={subjectData}
-            refetchSubject={refetchSubject}
-            currentContainer={currentContainer}
-            setCurrentContainer={setCurrentContainer}
-          />
-          {isModalOpen && <SettingModal setIsModalOpen={setIsModalOpen} />}
-        </>
-      ) : (
-        <NotFound />
-      )}
-    </>
+            {isModalOpen && <SettingModal setIsModalOpen={setIsModalOpen} />}
+          </>
+        ) : (
+          <NotFound />
+        )}
+      </div>
+    </div>
   );
 };
 

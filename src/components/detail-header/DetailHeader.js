@@ -3,8 +3,6 @@ import DetailHeaderWrapper from "./DetailHeaderWrapper";
 import SettingButton from "./SettingButton";
 
 const DetailHeader = ({ subjectData, refetchSubject, setIsModalOpen }) => {
-  console.log("DetailHeader rendered.");
-
   return (
     <>
       <DetailHeaderWrapper>

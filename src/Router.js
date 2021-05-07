@@ -8,10 +8,7 @@ import Login from "./pages/Login";
 import Main from "./pages/Main";
 import SubjectDetail from "./pages/SubjectDetail";
 import Register from "./pages/Register";
-import CreateSubject from "./pages/CreateSubject";
-import Project from "./pages/Project";
 import CreateProject from "./pages/CreateProject";
-import NavBar from "./components/NavBar";
 // 토큰이 없을 경우에 로그인 페이지, 있으면 메인페이지
 // 메인페이지에선 me Query문을 보내서 ok가 false면 토큰 삭제
 /* 로직
@@ -61,11 +58,6 @@ const Router = () => {
         <Route exact path="/" component={Main} />
         <Route exact path="/admin/info" component={AdminInfo} />
         <Route exact path="/project/create" component={CreateProject} />
-        <Route
-          exact
-          path="/project/:projectId/subject/create"
-          component={CreateSubject}
-        />
         <Route
           exact
           path="/project/:projectId/subject/:subjectId/:containerId"

@@ -1,6 +1,6 @@
 import { useMutation } from "@apollo/client";
 import React, { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router";
+import { useHistory, useParams } from "react-router";
 import {
   CONTAINERS_INDEX_MUTATION,
   CREATE_CONTAINER_MUTATION,
@@ -14,8 +14,10 @@ const ContainerIndex = ({
   currentContainer,
   setCurrentContainer,
 }) => {
+  const history = useHistory();
   // useParams
-  const { subjectId, containerId } = useParams();
+  const { projectId, subjectId, containerId } = useParams();
+  console.log(projectId, subjectId, containerId);
   // useState
   const [virtualIndex, setVirtualIndex] = useState([]);
   const [draggedText, setDraggedText] = useState("");
@@ -158,7 +160,8 @@ const ContainerIndex = ({
           // else : 한 번 눌렀다고 간주하는 경우
         } else {
           // setState
-          setCurrentContainer(name);
+          // setCurrentContainer(name);
+          history.push(`/project/${projectId}/subject/${subjectId}/${name}`);
           clickCount = 0;
           return;
         }

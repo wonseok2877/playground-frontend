@@ -1,32 +1,34 @@
 import { useReactiveVar } from "@apollo/client";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { authTokenVar, removeToken } from "../apolloClient";
 
 const NavBar = () => {
+  // useState
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   // useReactiveVar : 로그인 상태에 따라서 header에 띄울게 달라짐.
   const authToken = useReactiveVar(authTokenVar);
-  console.log(isUserMenuOpen);
   return (
     <>
-      <div className="px-2 py-1 flex justify-between items-center bg-gradient-to-r from-green-400 to-blue-400">
+      <section
+        className="fixed w-screen z-50 px-4 py-1 flex justify-between items-center "
+        style={{ backgroundColor: "#032F38" }}
+      >
         <Link to="/">
-          <div
+          <h1
             style={{
               fontFamily: "Arbutus Slab, serif",
-              fontSize: "50px",
+              fontSize: "23px",
+              color: "whitesmoke",
             }}
           >
             <span>play</span>
             <span className="keyframes-slide-out-right inline-block">.</span>
             <span className="keyframes-appear">ground</span>
-          </div>
+          </h1>
         </Link>
         <i
-          className={`fas fa-bars fixed right-0 z-20 text-3xl mr-5 cursor-pointer ${
-            isUserMenuOpen && "keyframes-rotate-down"
-          }`}
+          className={`fas fa-user right-0 z-20 text-3xl text-white cursor-pointer `}
           onClick={() =>
             isUserMenuOpen ? setIsUserMenuOpen(false) : setIsUserMenuOpen(true)
           }
@@ -50,7 +52,7 @@ const NavBar = () => {
             </div>
           ) : null}
         </div>
-      </div>
+      </section>
     </>
   );
 };

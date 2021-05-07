@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import {
   DELETE_PROJECT_MUTATION,
   EDIT_PROJECT_MUTATION,
-} from "../graphql/mutation";
+} from "../../graphql/mutation";
 
 const ConfigurationModal = ({
   projectItem,
@@ -78,7 +78,7 @@ const ConfigurationModal = ({
             <input
               value={titleText}
               onChange={eventHandler.titleTextChange}
-              className="p-4 bg-gray-300 focus:outline-none"
+              className="p-4 bg-gray-700 focus:outline-none"
             />
           </div>
           <div>
@@ -86,7 +86,7 @@ const ConfigurationModal = ({
             <input
               value={goalText}
               onChange={eventHandler.goalTextChange}
-              className="p-4 bg-gray-300 focus:outline-none"
+              className="p-4 bg-gray-700 focus:outline-none"
             />
           </div>
         </div>

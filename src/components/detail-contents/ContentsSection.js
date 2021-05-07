@@ -11,11 +11,10 @@ import {
 const ContentsSection = ({
   subjectData,
   refetchSubject,
-  currentContainer,
   setCurrentContainer,
 }) => {
   // useParams
-  const { subjectId } = useParams();
+  const { subjectId, containerId } = useParams();
   // useState
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isContentChanged, setIsContentChanged] = useState(false);
@@ -28,7 +27,7 @@ const ContentsSection = ({
     variables: {
       input: {
         subjectId: Number(subjectId),
-        title: currentContainer,
+        title: containerId,
         content: contentText,
       },
     },
@@ -37,7 +36,7 @@ const ContentsSection = ({
     variables: {
       input: {
         subjectId: Number(subjectId),
-        containerTitle: currentContainer,
+        containerTitle: containerId,
       },
     },
   });
@@ -52,7 +51,6 @@ const ContentsSection = ({
     if (result) {
       // if : textarea의 value가 null이 들어가면 안되도록.
       if (result.containers[0].content) {
-        console.log("set content text.");
         setContentText(result.containers[0].content);
       } else {
         setContentText("");
@@ -121,9 +119,10 @@ const ContentsSection = ({
       }
     },
   };
+  console.log(window.innerHeight);
   return (
-    <div className="flex flex-col min-h-screen bg-gray-500 bg-opacity-20">
-      <div className="px-10 pt-10 pb-32">
+    <>
+      <div className="px-5 pt-10 pb-32">
         <div className="h-5 flex justify-between items-center mb-2">
           <i
             className={`fas fa-circle ${
@@ -165,14 +164,16 @@ const ContentsSection = ({
           value={contentText}
           onChange={setContentText}
           preview={contentText ? "live" : "edit"}
-          height={600}
+          height={window.innerHeight - 200}
+          minHeight={300}
+          maxHeight={800}
           spellCheck="false"
         />
       </div>
       <div
         className={`${
-          isContentChanged ? "opacity-100" : "opacity-0"
-        } fixed z-10 bottom-0 w-screen px-10 py-5 flex justify-between items-center transition-opacity ease-in-out duration-300 bg-white`}
+          isContentChanged ? "" : "hidden"
+        } fixed z-10 bottom-0 w-screen px-10 py-5 flex justify-between items-center bg-white`}
       >
         <div></div>
         <div>
@@ -190,7 +191,7 @@ const ContentsSection = ({
           </button>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -53,6 +53,15 @@ md파일만이 아니라 다른 파일들까지.
 
 # 고칠 점들
 
+## sidebar 밀어내기
+sidebar의 transition translate에 따라서 다른 element들도 translate하도록. 이건 내가 볼 때 전체 element를 옆으로 움직여야 함. 
+
+## subject, container 이름 수정
+기존의 더블클릭 로직을 써도 된다. 
+하지만 이게 다른 사람들이 쓰기에도 편할까? 옆에 연필 아이콘을 붙여주든지 해서 그걸 누를 때 이름을 바꿀 수 있도록 하는게 낫지 않을까. 
+
+각각의 data와 각각의 Mutation문을 잘 놓으면 된다. 진짜 프로그래밍은 data놀이이다.
+
 ## favicon과 title
 React-helmet이 생각난다. 
 
