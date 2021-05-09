@@ -1,3 +1,95 @@
+# 2021-05-09
+
+우선순위
+- container 순서 바꾸기 로직
+- container 생성 로직 (Mutation)
+- container 삭제 시 history자동 이동
+- 서버 요청 최소화하는 방향으로 Query문 다듬기
+- sidebar component 전체 로직 간결하게 정리. 우선 sidebar을 메뉴아이콘, 전체 projects, 이전다음으로 나눈다. 그 다음 전체 projects를 project로 나누고, project를 subject로, subject를 container로. 대부분 
+- 파일 이름 정리.
+
+## 텍스트 더블클릭 시 구글번역 아이콘 뜸..
+텍스트를 텍스트로 대하지 않는 방법이 있나? 중요하지는 않지만 스타일적으로 거슬린다.
+
+## window.innerHeight
+얘도 state로 관리해야 하나? React의 라이프사이클 안에 둬야 하는지 고민이다.
+
+## event.ctrlKey
+ctrl 키와 s키를 모두 event.preventDafult()하니까 Mutation은 잘 되는데 정작 s키 자체를 칠 수가 없었다. 그래서 s키와 ctrl키가 정말 동시에 눌린 조건에만 한해서 event.preventDefault를 실행해야 했다. 
+
+state로 따로 굴리지 않아도 다른 keydown event에서 ctrl key를 인식할 수 있는, 야무진 property가 있어서 써봤다.
+
+? : 나중에 ctrlKey property를 쓸 수 없는 비슷한 문제가 생길 것 같다. 그러면 어떻게 대처할까? event자체를 state로 넘겨줘서 useEffect쪽에서 preventDafault를 해야 하나?
+
+! : window property는 알면 알 수록 끝이 없다.
+
+## 에러 메세지 보여줄 생각이 없네
+사용자도 에러 메세지를 보고 싶어할 거다. 직접 서버에서 본다기 보다는 대충 어디가 문제인지 정도는. 그런데 내가 지금 짠 코드들은 그에 대한 아무런 준비가 안 되어있다.
+
+## component 안의 variable
+component안에서 state가 아닌 let으로 선언한 변수가 좋은 접근 방식일까? 지금은 어떻게든 timer API에서 접근될 수 있는 변수를 만들기 위해서 let으로 선언했지만, 이게 맞는 방식인지는 모르겠다.
+
+## 이름 수정 로직 (subject, container)
+우선 이전에 쓰는 로직을 그대로 쓸 예정. 
+
+! : 이 방법은 click count가 바뀌는 사이에 state의 변화등으로 인해서 리렌더링이 없다는 가정 하에만 가능한 방법이다. 
+
+? : click count를 component 자체 scope에서 선언하기 싫어서 함수에서 선언하고 싶다. 그런데 함수는 click count의 값을 유지하지 않는다ㅋㅋ. closure도 마찬가지다. 어차피 한 번 실행하고 나면, 다음 event가 생길 때까지 기다리지 않고 garbage collecter가 수집해가기 때문. 내가 처음부터 계획하고 여러 번 함수를 실행하지 않는 이상, click count를 내 맘대로 유지할 수 있는 방법은 component쪽 scope에서 선언하는 것 뿐인 듯 하다. 
+
+? : state로는 될까?
+**state는 asynchronous이다.** 그래서 리렌더링되기 전까지 state는 변화하지 않고, 함수만 실행해선 그 값에 알맞게 접근할 수가 없다. state가 1이 올라도 함수는 리렌더링되기 이전이므로 0으로 인식한다. 
+
+? : useEffect와 state로는 될까?
+될거라고 생각한다. useEffect는 확실하게 state가 변화한 뒤에 실행되는 side effect이니까. 애초에 trigger되는 조건이 state의 변화다.
+
+timer에선 state의 변한 값을 인식하지 않는다. 그래서 기간동안 값이 얼마나 바뀌든, setTimeout안에선 useEffect에서 인식한 값만을 인식한다.  
+
+? : Link의 기본 속성 문제. 기본적으로 onClick event에 대해서 링크 이동기능을 하기 때문에, 부모가 onClick을 갖고 있더라도 따로 행동한다. 
+1. span으로 바꾼다. 그러면 부모의 onClick을 상속받을 것이다.
+2. event.stopPropagation함수 혹은 비슷한 함수를 찾아서, div의
+
+
+! : 문제. 링크 요소를 누를 때 history.push의 역할과 파일 펼치기 효과를 동시에 내느냐 마느냐. 그렇게 되면 링크 태그를 쓸 필요가 없어진다. 내쪽에서 이 두 기능을 합쳐야 하기 때문.
+
+## AWS status check가 1/2 failed
+Instance reachability check failed라는 이름으로..
+
+If this check fails, there might be an issue with the **infrastructure that is hosting your instance** (such as AWS power, networking, or software systems). You can restart or replace the instance, wait for Amazon EC2’s systems to resolve the issue, or seek technical support.
+
+# 2021-05-08
+
+## AWS 서버 문제
+서버를 킨 이후 알 수 없는 시점에 서버를 포함해서 인스턴스 자체가 멈춰버린다. 
+
+instance의 모니터링에서 CPU상태를 봤더니, 서버를 킨 시점부터 갑자기 100%를 찍었다. 원인이 뭘까? pm2로 서버를 돌린 거? nginx를 실행하는 거? 
+
+tc2-micro가 리소스가 좆만한게 문제. 
+
+https://aws.amazon.com/ko/premiumsupport/knowledge-center/ec2-linux-resource-over-utilization/
+
+인스턴스 작업 > instance settings > Change credit specification > 제한 풀기
+
+## SideBar 재건축
+기존에 컨텐츠 페이지에서 쓰던 로직들이 SideBar로 다 들어갔다. SideBar component의 로직을 처음부터 갈아엎다싶이 짜자.
+
+## subject, container 이름 수정
+기존의 더블클릭 로직을 써도 된다. 
+하지만 이게 다른 사람들이 쓰기에도 편할까? 옆에 연필 아이콘을 붙여주든지 해서 그걸 누를 때 이름을 바꿀 수 있도록 하는게 낫지 않을까. 
+
+각각의 data와 각각의 Mutation문을 잘 놓으면 된다. 진짜 프로그래밍은 data놀이이다.
+
+## 순서 바꾸기
+
+## Query문들 다 다듬기
+Query문을 종류별로 하나씩만 쓰고 있다. 구체적으로 어떤 data가 필요한지를 먼저 정리하고, 그에 따라 Query문을 나눠야 한다.
+
+## container 삭제 이후 갈 곳 없음 
+history.push() ?
+
+
+## project 이전 다음 style
+
+
 # JS 궁금증
 - 변수 다루는 법 : 어떨 떄 let을 쓰고 어떨 때 const를 써야 하는지. state에 너무 익숙해져있음. 변수를 잘 다루고, 변수와 state의 공통점과 차이점을 안 이후에야 state를 잘 쓸 수 있다.
 - scope
@@ -51,16 +143,11 @@ md파일만이 아니라 다른 파일들까지.
 3. 목차 안에서 순서대로. 컨텐츠 자체가 array가 되서 subject가 거대해짐. 아직은 필요 없을 듯.
 
 
+# 질문들
+## event의 property
+event.preventDefault()를 더 자세히 알아보자. 다른 event관련 property도.
+
 # 고칠 점들
-
-## sidebar 밀어내기
-sidebar의 transition translate에 따라서 다른 element들도 translate하도록. 이건 내가 볼 때 전체 element를 옆으로 움직여야 함. 
-
-## subject, container 이름 수정
-기존의 더블클릭 로직을 써도 된다. 
-하지만 이게 다른 사람들이 쓰기에도 편할까? 옆에 연필 아이콘을 붙여주든지 해서 그걸 누를 때 이름을 바꿀 수 있도록 하는게 낫지 않을까. 
-
-각각의 data와 각각의 Mutation문을 잘 놓으면 된다. 진짜 프로그래밍은 data놀이이다.
 
 ## favicon과 title
 React-helmet이 생각난다. 
@@ -85,65 +172,21 @@ React-helmet이 생각난다.
 - style
 - 로고
 
-# 문제들
-
-## container contents의 data fetch문제
-처음 받아올 땐 잘 받아온다. 그러나 두번째부터 cache에 의존하기 시작하면서 data를 이전 container의 data만을 가져온다.
-
-서버로부터의 result 자체가 안 바뀐다. 
-? : Apollo Client는 cache를 저장할 때 Query단위로 저장하는 것 같다. 그래서 단 하나의 Query로 그 안의 property들까지 여러번 cache화하려고 해서 그런듯 하다. 
-따라서 cache 혹은 refetch를 쓸거면 Query문을 구분지어줘야 한다. 즉, 매번 다른 Query를 던져줘야 나중에 cache를 쓸 때에도 원활한 것.
-혹은 useLazyQuery 함수로 해결될 것이다. 그러나 매번 던져야 한다는게.. 그러면 Apollo Client를 쓰는 의미가 없다ㅋㅋ. 
-
-container의 contents에 대한 Query문이 서버쪽에서 있어야 한다고 생각한다. 
-
-애초에 이거 지금 container의 contents만 받아올려고 하는데 무겁게 전체 subject를 Query해야되는거잖아?
-
-## 특정 시점마다 Mutation
-useEffect의 dependency에 대한 이해 부족이 원인.
-선택지
-1. contentText를 dependency로 하는 useEffect를 실행. contentText가 서버로부터 온 이후에 바뀐 경우, 즉 유저가 수정을 하려고 한 경우에 실행. setTimeout을 실행해도 되나. 바깥 scope에서 정의한 변수를 하나 올리고, 그게 1인 동안은 setTimeout실행 안함. 그리고 지정한 시간이 끝났을 때 Mutation요청을 던진다.
-2. Router params의 containerTitle을 dependency로 하는 useEffect 실행. 그렇지 않으면 containerTitle이 바뀐 뒤에도 이전의 state를 요청으로 넣을 것이다.
-
-로직
-1. setInterval을 실행하는 시점은 처음 페이지가 mounting되거나 containerTitle이 바뀌었을 때다. 
-container이 바뀌었는데도 마운팅 되었을 때의 state를 갖고 요청을 하게 되기 때문. 
-1. Mutation에는 3개의 변수를 쓰고 있다. 컨테이너를 구분하기 위한 subjectId와 containerTitle, 그리고 contentText. 이 변수들을 정의한 이후에 함수를 실행해야 한다.
-2.  
-
-## CSS가 없어서 쓸 맛이 안 난다.
-사실 없어도 그만 있어도 그만이기는 하다. 그러나 실제로 내가 쓰고 있다는 느낌을 주기 위해서 최소한은 꾸며야겠다.
-
-## React에서 깜빡거림은 수치다.
-디테일 페이지에서 url을 바꿀 때마다, 화면이 깜빡거린다. 원인을 찾아야 할 듯하다. refetch때문인지, setState때문인지.
-
-## state를 쓰는 로직이 뒤죽박죽~
-관계와 순서를 확실히 해둬야 한다. 정말 필요한 state만 있는지, 엉뚱한 state값을 참조하고 있지는 않은지 확실히 하고 넘어가야 한다.
-
-## 클릭과 더블클릭을 구별하기 위한 0.15초
-setTimeOut은 쓸데없이 시간을 잡아먹을 수 있다. data를 fetching하는 것도 아닌데 0.2초를 기다려야 한다는건 미개할 수 있다. 다른 것도 아니고 더블클릭인지 클릭인지만 확인하는 것 때문에. 흐음.
-- onClick의 call back함수에선 더블클릭함수를 호출하지 말까? 그냥 카운트만 많이 쌓이면 취소하는 식으로? 
-- 이건 문제 해결의 본질이 아니다. setTimeOut의 시간이 걸리적거린다는게 문제의 핵심이다 지금.
-
-## onKeyDown 함수화
-onKeyDown의 callback함수들이 다 똑같이 생겼다. 그런데 지금은 한땀한땀 쓰고 있다. 나중에 onKeyDown을 야무지게 쓰려면, event.key에 따라 분기처리를 해서 하나의 함수로 만들면 될 듯하다. 여러번 쓸 수 있게.
-
-## event 함수를 Hook화하기  
-- state가 아닌 해당 element의 정보를 인자값으로 하는 함수의 경우 어떻게 함수로 만들어야 할 지 모르겠다. 특히 그 안에서 useMutation의 함수를 써야할 때, Hook을 쓰기 힘든 듯 하다. useMutation을 Hook으로 만드는 법을 더 배워야 겠다.
-
-## refetch 이해 부족
-- 대체 왜 project를 refetch하는데 projects에서 반영되는거야? 개신기하네.
-- projects Query가 project Query이후에 실행되는게 분명한데, 지금 명확하게 구조 파악이 안되어서 그럼.
-- refetch를 하면 서버로 요청하는 비용이 얼마나 나는지 궁금하다. graphQL을 이해해야 알 수 있을 문제.
-
-## 토큰 유효성 검사 과정에서 data fetch 최소화하기
-- 지금은 me Query로 해당 토큰이 유효한지 확인해야 한다. 그러나 난 요청을 최소한으로 하고 싶다. token의 진위여부를 확인하는 다른 방법이 없을까?
-
-## 토큰 유효기간에 대해 실시간으로 반응하기
-- token이 expired될 때 실시간으로 token을 삭제하고 페이지에서 그 변화를 인식하는 방법 ?
-
 
 # 문제 해결
+
+## KEYDOWN 이벤트의 디폴트 기능 없애기 ! ctrl + S
+ctrl + s의 각각의 키들이 눌린 상태를 state로 관리하고, useEffect를 통해서 state 변화에 따라서 Mutation을 한다.
+이 과정에서 에러가 생긴다. useEffect
+
+? : Apollo Error은 왜 떴을까?
+
+## sidebar transition 효과 주면서  밀어내기
+문제 : sidebar의 transition translate에 따라서 다른 element들도 translate하도록. 이건 내가 볼 때 전체 element를 옆으로 움직여야 함.
+
+해결 : translateX를 일정 고정 단위로 줬다. 그러나 문제가 또 하나. translate는 페이지 전체가 반응해서, 옆 혹은 위에 여백이 생긴다. 일단 **overflow-x-hidden**으로 땜빵은 했지만, 확실히 본질적인 해결책은 아니다. 다른 방법이 있을텐데.
+
+그리고 에디터가 있는 element에는 padding left-같은 단위값을 줬다. 근데 신기하게 transition에 따라서 애니메이션 효과가 같이 들어갔다. tailwinds의 효과인지 뭔지는 모르겠다.
 
 ## box와 eventListener
 1. useEffect : Query문의 data인 subjects_index를 setState
@@ -237,6 +280,65 @@ react-draggable이라는 라이브러리를 썼는데, 한 번 관련 에러가 
 ## JSX 안의 JS
 1. className을 JS스럽게 manipulate하기 : className안에서 {`${}`}식으로 JS표현을 쓰면 끝. state의 값에 따라서 값을 바꿨다.
 2.  방금 생성한 투두에만 animation을 적용하고 싶다. : 서버에서 온 createdAt data를 이용해서 new Date()와 비교한다 ㅋㅋㅋㅋ. 1초 이하 이전에 생긴거에 한해서 animation효과를 준다.  
+
+
+
+# 문제들
+
+## container contents의 data fetch문제
+처음 받아올 땐 잘 받아온다. 그러나 두번째부터 cache에 의존하기 시작하면서 data를 이전 container의 data만을 가져온다.
+
+서버로부터의 result 자체가 안 바뀐다. 
+? : Apollo Client는 cache를 저장할 때 Query단위로 저장하는 것 같다. 그래서 단 하나의 Query로 그 안의 property들까지 여러번 cache화하려고 해서 그런듯 하다. 
+따라서 cache 혹은 refetch를 쓸거면 Query문을 구분지어줘야 한다. 즉, 매번 다른 Query를 던져줘야 나중에 cache를 쓸 때에도 원활한 것.
+혹은 useLazyQuery 함수로 해결될 것이다. 그러나 매번 던져야 한다는게.. 그러면 Apollo Client를 쓰는 의미가 없다ㅋㅋ. 
+
+container의 contents에 대한 Query문이 서버쪽에서 있어야 한다고 생각한다. 
+
+애초에 이거 지금 container의 contents만 받아올려고 하는데 무겁게 전체 subject를 Query해야되는거잖아?
+
+## 특정 시점마다 Mutation
+useEffect의 dependency에 대한 이해 부족이 원인.
+선택지
+1. contentText를 dependency로 하는 useEffect를 실행. contentText가 서버로부터 온 이후에 바뀐 경우, 즉 유저가 수정을 하려고 한 경우에 실행. setTimeout을 실행해도 되나. 바깥 scope에서 정의한 변수를 하나 올리고, 그게 1인 동안은 setTimeout실행 안함. 그리고 지정한 시간이 끝났을 때 Mutation요청을 던진다.
+2. Router params의 containerTitle을 dependency로 하는 useEffect 실행. 그렇지 않으면 containerTitle이 바뀐 뒤에도 이전의 state를 요청으로 넣을 것이다.
+
+로직
+1. setInterval을 실행하는 시점은 처음 페이지가 mounting되거나 containerTitle이 바뀌었을 때다. 
+container이 바뀌었는데도 마운팅 되었을 때의 state를 갖고 요청을 하게 되기 때문. 
+1. Mutation에는 3개의 변수를 쓰고 있다. 컨테이너를 구분하기 위한 subjectId와 containerTitle, 그리고 contentText. 이 변수들을 정의한 이후에 함수를 실행해야 한다.
+2.  
+
+## CSS가 없어서 쓸 맛이 안 난다.
+사실 없어도 그만 있어도 그만이기는 하다. 그러나 실제로 내가 쓰고 있다는 느낌을 주기 위해서 최소한은 꾸며야겠다.
+
+## React에서 깜빡거림은 수치다.
+디테일 페이지에서 url을 바꿀 때마다, 화면이 깜빡거린다. 원인을 찾아야 할 듯하다. refetch때문인지, setState때문인지.
+
+## state를 쓰는 로직이 뒤죽박죽~
+관계와 순서를 확실히 해둬야 한다. 정말 필요한 state만 있는지, 엉뚱한 state값을 참조하고 있지는 않은지 확실히 하고 넘어가야 한다.
+
+## 클릭과 더블클릭을 구별하기 위한 0.15초
+setTimeOut은 쓸데없이 시간을 잡아먹을 수 있다. data를 fetching하는 것도 아닌데 0.2초를 기다려야 한다는건 미개할 수 있다. 다른 것도 아니고 더블클릭인지 클릭인지만 확인하는 것 때문에. 흐음.
+- onClick의 call back함수에선 더블클릭함수를 호출하지 말까? 그냥 카운트만 많이 쌓이면 취소하는 식으로? 
+- 이건 문제 해결의 본질이 아니다. setTimeOut의 시간이 걸리적거린다는게 문제의 핵심이다 지금.
+
+## onKeyDown 함수화
+onKeyDown의 callback함수들이 다 똑같이 생겼다. 그런데 지금은 한땀한땀 쓰고 있다. 나중에 onKeyDown을 야무지게 쓰려면, event.key에 따라 분기처리를 해서 하나의 함수로 만들면 될 듯하다. 여러번 쓸 수 있게.
+
+## event 함수를 Hook화하기  
+- state가 아닌 해당 element의 정보를 인자값으로 하는 함수의 경우 어떻게 함수로 만들어야 할 지 모르겠다. 특히 그 안에서 useMutation의 함수를 써야할 때, Hook을 쓰기 힘든 듯 하다. useMutation을 Hook으로 만드는 법을 더 배워야 겠다.
+
+## refetch 이해 부족
+- 대체 왜 project를 refetch하는데 projects에서 반영되는거야? 개신기하네.
+- projects Query가 project Query이후에 실행되는게 분명한데, 지금 명확하게 구조 파악이 안되어서 그럼.
+- refetch를 하면 서버로 요청하는 비용이 얼마나 나는지 궁금하다. graphQL을 이해해야 알 수 있을 문제.
+
+## 토큰 유효성 검사 과정에서 data fetch 최소화하기
+- 지금은 me Query로 해당 토큰이 유효한지 확인해야 한다. 그러나 난 요청을 최소한으로 하고 싶다. token의 진위여부를 확인하는 다른 방법이 없을까?
+
+## 토큰 유효기간에 대해 실시간으로 반응하기
+- token이 expired될 때 실시간으로 token을 삭제하고 페이지에서 그 변화를 인식하는 방법 ?
 
 
 # 전제 : 프로젝트의 목적

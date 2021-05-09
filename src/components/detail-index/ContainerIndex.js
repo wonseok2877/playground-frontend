@@ -73,37 +73,37 @@ const ContainerIndex = ({
   }, [result]);
 
   //  함수 정의 : 야바위 로직과 Mutation문 함수 호출
-  const containersIndexSubmit = async (array) => {
-    if (typeof array !== "object") return;
+  const containersIndexSubmit = async (newArray) => {
+    if (typeof newArray !== "object") return;
 
-    // 변수 선언 : array 애기들 비교. map 안에서 각각의 애기들을 비교하면 된다.
+    // 변수 선언 : newArray 애기들 비교. map 안에서 각각의 애기들을 비교하면 된다.
     // map()과 find() : 하나라도 다른게 있을 경우 false가 array로 들어간다.
-    const isDifferent = array.map((newGuy) => {
+    const isDifferent = newArray.map((newGuy) => {
       const eachGuy = virtualIndex.find((oldGuy) => oldGuy === newGuy);
       if (eachGuy) return false;
       else return true;
     });
     const checkIsRepeated = () => {
       let saveCount = 0;
-      array.map((guy) => array.map((gay) => gay === guy && saveCount++));
+      newArray.map((guy) => newArray.map((gay) => gay === guy && saveCount++));
       return saveCount;
     };
     const repeatCount = checkIsRepeated();
     // if : 둘이 값이 아예 같으면 함수 실행 안함.
     // ? : 왜 array일때는 값이 다른거지? type도 같고 안의 값들도 같은 array인데. 다른 주솟값이기 때문.
-    if (virtualIndex.toString() === array.toString()) {
+    if (virtualIndex.toString() === newArray.toString()) {
       console.log("요청할 필요가 없음.");
       return;
       // if : 두 array의 길이가 같지 않을때. 즉 어느 한쪽이 부족하거나 더 많을 땐 initialize하고 return.
-    } else if (array.length !== virtualIndex.length) {
+    } else if (newArray.length !== virtualIndex.length) {
       console.log("갯수가 안 맞음");
       return;
       // if : array안에 하나라도 true가 있을 경우. 즉 string값이 다를 경우.
     } else if (isDifferent.find((c) => c)) {
       console.log("원래 없던 값");
       return;
-      // if : 중복. 서로 같은 숫자가 array 길이보다 길 경우
-    } else if (repeatCount > array.length) {
+      // if : 중복. 서로 같은 숫자가 newArray 길이보다 길 경우
+    } else if (repeatCount > newArray.length) {
       console.log("중복!");
       return;
     }
@@ -119,14 +119,15 @@ const ContainerIndex = ({
           input: {
             subjectId: +subjectId,
             // state가 아닌, 직접 인자값으로 받은 새로운 array값을 넣는다.
-            containersIndex: array,
+            containersIndex: newArray,
           },
         },
       });
+      console.log(ok);
       if (error) throw new Error(error);
       if (ok) {
         // ? : refetch 필요한가 필요하지 않은가
-        setVirtualIndex(array);
+        setVirtualIndex(newArray);
       }
     } catch (error) {
       console.log(error);
@@ -160,7 +161,6 @@ const ContainerIndex = ({
           // else : 한 번 눌렀다고 간주하는 경우
         } else {
           // setState
-          // setCurrentContainer(name);
           history.push(`/project/${projectId}/subject/${subjectId}/${name}`);
           clickCount = 0;
           return;
@@ -203,8 +203,6 @@ const ContainerIndex = ({
     handleDragOverBox: (event) => {
       // preventDefault() : onDragOver의 디폴트 효과를 막음.
       event.preventDefault();
-      // ? : 정말 필요한 함수인지 확인하자.
-      event.stopPropagation();
     },
     handleDragDrop: ({ target }) => {
       // id : innerText가 인식이 안 되서 id로 한다. 좋은 방식은 아닌 듯.

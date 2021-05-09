@@ -30,7 +30,6 @@ const SideBar = () => {
       },
     },
   });
-  console.log(projectsData);
   // 변수 정의 : event handler 객체
   const eventHandler = {
     openSideBarClick: () => {
@@ -61,7 +60,7 @@ const SideBar = () => {
           style={{ color: isSideBarOpen ? "white" : "#032F38" }}
           className="z-40 fixed top-12 ml-4 text-4xl focus:outline-none transition-colors ease-in-out duration-500"
         >
-          <i class="fas fa-bars"></i>
+          <i className="fas fa-bars"></i>
         </button>
       </div>
       <div

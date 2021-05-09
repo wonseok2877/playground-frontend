@@ -16,8 +16,12 @@ const ContentsSection = ({
   // useParams
   const { subjectId, containerId } = useParams();
   // useState
+  // boolean
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isContentChanged, setIsContentChanged] = useState(false);
+  const [isControlKeyPressed, setIsControlKeyPressed] = useState(false);
+  const [isSKeyPressed, setIsSKeyPressed] = useState(false);
+  // string
   const [contentText, setContentText] = useState("");
   const [updatedDate, setUpdatedDate] = useState(null);
   // useRef
@@ -42,8 +46,37 @@ const ContentsSection = ({
   });
   // 변수 정의 : project Query문의 핵심 data
   const { result } = subjectData.subject;
-
   const containersIndex = result.containers_index.split(",");
+
+  // useEffect : mounting
+  useEffect(() => {
+    // 함수 정의 : keydown과 keyup event handler
+    const keydownHandler = (event) => {
+      // 조건문 : s키와 ctrl키가 동시에 눌린 경우.
+      if (event.key === "s" && event.ctrlKey) {
+        event.preventDefault();
+        // 함수 정의 : async
+        const postData = async () => {
+          try {
+            const { data } = await editContainerContent();
+            console.log(data);
+            await refetchSubject();
+          } catch (error) {
+            console.log(error);
+          }
+        };
+        postData();
+      }
+    };
+
+    // addEventListener
+    window.addEventListener("keydown", keydownHandler);
+    // clean up
+    return () => {
+      window.removeEventListener("keydown", keydownHandler);
+    };
+  }, []);
+  // useEffect : key pressed state
 
   // useEffect : Query문 요청에 대한 result.
   useEffect(() => {
@@ -66,7 +99,7 @@ const ContentsSection = ({
       return;
     }
   }, [result]);
-  // useEffect : contentText
+  // useEffect : contentText state
   useEffect(() => {
     const { content } = result.containers[0];
     // if : 기본 state가 다 있고, data로 온 content와 state가 다를 경우에만.
@@ -89,6 +122,7 @@ const ContentsSection = ({
     document.addEventListener("mousedown", handleMouseDown);
     return () => document.removeEventListener("mousedown", handleMouseDown);
   }, [modalRef]);
+
   // 변수 정의 : 객체
   const eventHandler = {
     editContentSubmit: async (event) => {
@@ -119,7 +153,6 @@ const ContentsSection = ({
       }
     },
   };
-  console.log(window.innerHeight);
   return (
     <>
       <div className="px-5 pt-10 pb-32">

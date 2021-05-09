@@ -11,7 +11,7 @@ const NavBar = () => {
   return (
     <>
       <section
-        className="fixed w-screen z-50 px-4 py-1 flex justify-between items-center "
+        className="fixed top-0 w-screen z-50 px-4 py-1 flex justify-between items-center "
         style={{ backgroundColor: "#032F38" }}
       >
         <Link to="/">

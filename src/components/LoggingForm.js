@@ -125,7 +125,7 @@ const LoggingForm = () => {
         <h3 className="text-red-500 text-center text-xl w-10/12">
           {state.errorMessage && (
             <div>
-              <i class="fas fa-exclamation-triangle mr-3"></i>
+              <i className="fas fa-exclamation-triangle mr-3"></i>
               <span>{state.errorMessage}</span>
             </div>
           )}
@@ -170,7 +170,7 @@ const LoggingForm = () => {
           <h3 className=" w-9/12 h-9 text-red-500 text-center text-xl">
             {state.passwordMessage && (
               <div>
-                <i class="fas fa-exclamation-triangle mr-3"></i>
+                <i className="fas fa-exclamation-triangle mr-3"></i>
                 <span>{state.passwordMessage}</span>
               </div>
             )}

@@ -26,7 +26,7 @@ const SubjectDetail = () => {
   const { isSideBarOpen } = useContext(stateContext);
   // Hook : 토큰 유효성 검사 Query
   useAdminCheck();
-  // useMutation
+  // useQuery
   const {
     loading: loadingSubject,
     data: subjectData,
@@ -35,7 +35,7 @@ const SubjectDetail = () => {
     fetchPolicy: "network-only",
     variables: {
       input: {
-        subjectId: +subjectId,
+        subjectId: Number(subjectId),
         containerTitle: containerId,
       },
     },

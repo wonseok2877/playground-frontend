@@ -43,7 +43,7 @@ const CreateProject = () => {
   return (
     <>
       <NavBar />
-      <div className="min-h-screen bg-gray-200 ">
+      <div className="min-h-screen bg-gray-200 mt-16">
         <form onSubmit={handleSubmit} className="">
           <div className=" flex flex-col justify-between bg-white">
             <input
